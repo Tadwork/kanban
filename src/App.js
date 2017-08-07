@@ -1,26 +1,30 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import PropTypes from 'prop-types';
 import './App.css';
-import {Column} from './Column';
+import {Column} from './Components/Column';
 import board_response from './board_response';
-
+import update from 'immutability-helper';
 class App extends Component {
   constructor(props){
     super(props);
-    const board = board_response.reduce((ppl,person)=>{ppl[person.name]=person},{})
     this.state = {
-      ...board
+      board:board_response
     }
   }
   addACard(name,card){
+    this.setState(((prev)=>{
+      const personIndex = prev.board.findIndex((p)=>p.name === name);
+      const newState =  {
+        board:{
+          [personIndex]:{
+            cards: {$push: [card]}
+          }
+        }
+      }
+      console.log(personIndex,newState)
 
-    const column = this.state[name];
-    column.cards.push(card);
-    // const board = this.state;
-    // board[name] = column;
-    this.setState({
-        [name]:column
-    });
+      return update(prev, newState)
+    }));
   }
   getChildContext(){
     return {
@@ -32,7 +36,7 @@ class App extends Component {
       <div className="App">
         <div className="column-container">
           {
-            this.state.map((person)=><Column {...person}/>)
+            this.state.board.map((person)=><Column {...person}/>)
           }
         </div>
       </div>
@@ -40,7 +44,7 @@ class App extends Component {
   }
 }
 App.childContextTypes = {
-	addACard : React.PropTypes.func
+	addACard : PropTypes.func
 }
 
 export default App;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Card} from './Card';
 
 export const Column = ({name,color,cards=[]},{addACard})=>{
@@ -19,5 +20,5 @@ export const Column = ({name,color,cards=[]},{addACard})=>{
 	);
 }
 Column.contextTypes = {
-	addACard : React.PropTypes.func
+	addACard : PropTypes.func
 }
